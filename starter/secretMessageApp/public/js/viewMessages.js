@@ -3,13 +3,6 @@ const getMessage = () => {
     messagesRef.on('value', (snapshot) => {
         const data = snapshot.val();
         console.log(data);
-        for(let key in data) {
-            const message = data(key);
-            console.log(message);
-            if(myPass == message.passcode) {
-                renderMessage(message); 
-            }
-        }
     });
 }
 
@@ -17,9 +10,8 @@ const findMessage = (myPass) => {
     const messagesRef = firebase.database().ref();
     messagesRef.on('value', (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
         for(let key in data) {
-            const message = data(key);
+            const message = data[key];
             console.log(message);
             if(myPass == message.passcode) {
                 renderMessage(message); 
@@ -28,7 +20,12 @@ const findMessage = (myPass) => {
     });
 }
 
-document.querySelector("#viewMsg").addEventListener("click", ()=> {
+const renderMessage = (messageObject) => {
+    // Render messageas HTML
+    document.querySelector('#message').innerHTML = messageObject.message;
+}
+
+document.querySelector('#viewMsg').addEventListener("click", (e)=> {
     const passcode = document.querySelector('#passcode').value;
     findMessage(passcode);
 });
